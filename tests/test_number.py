@@ -116,9 +116,9 @@ def test_intword_powers() -> None:
         (["3500000000000000000000"], "3.5 sextillion"),
         (["8100000000000000000000000000000000"], "8.1 decillion"),
         (["-8100000000000000000000000000000000"], "-8.1 decillion"),
-        ([1_000_000_000_000_000_000_000_000_000_000_000_000], "1000.0 decillion"),
-        ([1_100_000_000_000_000_000_000_000_000_000_000_000], "1100.0 decillion"),
-        ([2_100_000_000_000_000_000_000_000_000_000_000_000], "2100.0 decillion"),
+        ([1_000_000_000_000_000_000_000_000_000_000_000_000], "1.0 googol"),
+        ([1_100_000_000_000_000_000_000_000_000_000_000_000], "1.1 googol"),
+        ([2_100_000_000_000_000_000_000_000_000_000_000_000], "2.1 googol"),
         ([2e100], "2.0 googol"),
         ([None], "None"),
         (["1230000", "%0.2f"], "1.23 million"),
@@ -135,6 +135,18 @@ def test_intword_powers() -> None:
         (["1234567", "%.3f"], "1.235 million"),
         (["999500", "%.0f"], "1 million"),
         (["999499", "%.0f"], "999 thousand"),
+        # After rounding, promote to the next slot rather than overflow into
+        # the next power of 10 (e.g. 999999 -> "1.0 million", 1e36 -> "1.0
+        # googol", 10**101 -> "10.0 googol" stays put because there is no
+        # next slot to promote into).
+        ([999999], "1.0 million"),
+        ([999999999], "1.0 billion"),
+        ([999999999999], "1.0 trillion"),
+        ([999999999999999], "1.0 quadrillion"),
+        ([-999999], "-1.0 million"),
+        ([10**36], "1.0 googol"),
+        ([5 * 10**36], "5.0 googol"),
+        ([-10**36], "-1.0 googol"),
     ],
 )
 def test_intword(test_args: list[str], expected: str) -> None:

@@ -2,6 +2,8 @@
 
 from __future__ import annotations
 
+from typing import Iterable, Sequence
+
 TYPE_CHECKING = False
 if TYPE_CHECKING:
     from typing import Any
@@ -9,30 +11,41 @@ if TYPE_CHECKING:
 __all__ = ["natural_list"]
 
 
-def natural_list(items: list[Any]) -> str:
+def natural_list(
+    items: Sequence[Any] | Iterable[Any],
+    conjunction: str = "and",
+) -> str:
     """Natural list.
 
-    Convert a list of items into a human-readable string with commas and 'and'.
+    Convert a list of items into a human-readable string with commas and a
+    final conjunction (default ``"and"``).  Pass ``"or"`` (or any other
+    word) to change the final separator:
 
     Examples:
         >>> natural_list(["one", "two", "three"])
         'one, two and three'
+        >>> natural_list(["one", "two", "three"], conjunction="or")
+        'one, two or three'
         >>> natural_list(["one", "two"])
         'one and two'
         >>> natural_list(["one"])
         'one'
 
     Args:
-        items (list): An iterable of items.
+        items: An iterable of items.
+        conjunction: Word to use between the penultimate and last item.
+            Defaults to ``"and"``; pass ``"or"`` to produce a disjunction
+            list like ``"a, b or c"``.
 
     Returns:
-        str: A string with commas and 'and' in the right places.
+        A string with commas and the chosen conjunction in the right
+        places.  Returns an empty string for an empty input.
     """
-    if not items:
+    items_list = list(items)
+    if not items_list:
         return ""
-    if len(items) == 1:
-        return str(items[0])
-    elif len(items) == 2:
-        return f"{str(items[0])} and {str(items[1])}"
-    else:
-        return ", ".join([str(item) for item in items[:-1]]) + f" and {str(items[-1])}"
+    if len(items_list) == 1:
+        return str(items_list[0])
+    if len(items_list) == 2:
+        return f"{items_list[0]} {conjunction} {items_list[1]}"
+    return ", ".join(str(item) for item in items_list[:-1]) + f" {conjunction} {items_list[-1]}"

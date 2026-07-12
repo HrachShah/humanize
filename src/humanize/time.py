@@ -172,9 +172,9 @@ def naturaldelta(
             if min_unit == Unit.MILLISECONDS or (
                 min_unit == Unit.MICROSECONDS and 1000 <= delta.microseconds < 1_000_000
             ):
-                milliseconds = delta.microseconds / 1000
+                milliseconds = round(delta.microseconds / 1000)
                 return (
-                    _ngettext("%d millisecond", "%d milliseconds", int(milliseconds))
+                    _ngettext("%d millisecond", "%d milliseconds", milliseconds)
                     % milliseconds
                 )
             return _("a moment")

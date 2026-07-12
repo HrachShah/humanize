@@ -856,3 +856,52 @@ def test_time_unit() -> None:
 )
 def test_rounding_by_fmt(fmt: str, value: float, expected: float) -> None:
     assert time._rounding_by_fmt(fmt, value) == pytest.approx(expected)
+
+
+@pytest.mark.parametrize(
+    "bad_unit",
+    [
+        "seconds ",  # trailing space
+        " seconds",  # leading space
+        "second",  # singular
+        "mseconds",  # typo
+        "",  # empty
+        "frobnicate",  # nonsense
+    ],
+)
+def test_naturaldelta_rejects_unknown_minimum_unit(bad_unit: str) -> None:
+    with pytest.raises(
+        ValueError,
+        match=(
+            f"Minimum unit '{bad_unit}' is not a recognised unit. "
+            "Supported minimum units for naturaldelta are: "
+            "seconds, milliseconds, microseconds."
+        ),
+    ):
+        humanize.naturaldelta(60, minimum_unit=bad_unit)
+
+
+@pytest.mark.parametrize(
+    "bad_unit",
+    ["seconds ", " second", "mseconds", "", "frobnicate"],
+)
+def test_precisedelta_rejects_unknown_minimum_unit(bad_unit: str) -> None:
+    with pytest.raises(
+        ValueError,
+        match=(
+            f"Minimum unit '{bad_unit}' is not a recognised unit. "
+            "Allowed values are: "
+        ),
+    ):
+        humanize.precisedelta(60, minimum_unit=bad_unit)
+
+
+def test_precisedelta_rejects_unknown_unit_in_suppress() -> None:
+    with pytest.raises(
+        ValueError,
+        match=(
+            "Unknown unit in suppress list: 'FOOBNICATE'. "
+            "Allowed values are: "
+        ),
+    ):
+        humanize.precisedelta(60, suppress=["foobnicate"])

@@ -138,9 +138,27 @@ def naturaldelta(
     """
     import datetime as dt
 
-    tmp = Unit[minimum_unit.upper()]
+    try:
+        tmp = Unit[minimum_unit.upper()]
+    except KeyError as exc:
+        supported = ", ".join(
+            member.name.lower()
+            for member in (Unit.SECONDS, Unit.MILLISECONDS, Unit.MICROSECONDS)
+        )
+        msg = (
+            f"Minimum unit {minimum_unit!r} is not a recognised unit. "
+            f"Supported minimum units for naturaldelta are: {supported}."
+        )
+        raise ValueError(msg) from exc
     if tmp not in (Unit.SECONDS, Unit.MILLISECONDS, Unit.MICROSECONDS):
-        msg = f"Minimum unit '{minimum_unit}' not supported"
+        supported = ", ".join(
+            member.name.lower()
+            for member in (Unit.SECONDS, Unit.MILLISECONDS, Unit.MICROSECONDS)
+        )
+        msg = (
+            f"Minimum unit {minimum_unit!r} not supported. "
+            f"Supported minimum units for naturaldelta are: {supported}."
+        )
         raise ValueError(msg)
     min_unit = tmp
 
@@ -540,11 +558,26 @@ def precisedelta(
     if date is None:
         return str(value)
 
-    suppress_set = {Unit[s.upper()] for s in suppress}
+    try:
+        suppress_set = {Unit[s.upper()] for s in suppress}
+    except KeyError as exc:
+        bad = exc.args[0] if exc.args else "?"
+        msg = (
+            f"Unknown unit in suppress list: {bad!r}. "
+            "Allowed values are: " + ", ".join(m.name.lower() for m in Unit)
+        )
+        raise ValueError(msg) from exc
 
     # Find a suitable minimum unit (it can be greater than the one that the
     # user gave us, if that one is suppressed).
-    min_unit = Unit[minimum_unit.upper()]
+    try:
+        min_unit = Unit[minimum_unit.upper()]
+    except KeyError as exc:
+        msg = (
+            f"Minimum unit {minimum_unit!r} is not a recognised unit. "
+            "Allowed values are: " + ", ".join(m.name.lower() for m in Unit)
+        )
+        raise ValueError(msg) from exc
     min_unit = _suitable_minimum_unit(min_unit, suppress_set)
     del minimum_unit
 

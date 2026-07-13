@@ -103,3 +103,23 @@ def test_naturalsize(test_args: list[int] | list[int | bool], expected: str) -> 
         test_args[0] = f"-{test_args[0]}"
 
     assert humanize.naturalsize(*test_args) == "-" + expected
+
+
+def test_naturalsize_rejects_bool() -> None:
+    """A bool argument must raise TypeError.
+
+    ``float(True)`` returns ``1.0`` and ``float(False)`` returns ``0.0``,
+    so a stray bool (e.g. ``naturalsize(loaded_dict.get("size"))`` when
+    ``loaded_dict["size"]`` is a JSON boolean) would silently format as
+    "1.0 kB" / "0 Bytes" instead of flagging the call site. Rejecting
+    bools at the boundary makes the bug visible at the point it occurs.
+    """
+    with pytest.raises(TypeError, match="naturalsize\\(\\) value must be a number"):
+        humanize.naturalsize(True)
+    with pytest.raises(TypeError, match="naturalsize\\(\\) value must be a number"):
+        humanize.naturalsize(False)
+
+    # Numeric strings and ints must continue to work.
+    assert humanize.naturalsize(0) == "0 Bytes"
+    assert humanize.naturalsize(1024) == "1.0 kB"
+    assert humanize.naturalsize("1024") == "1.0 kB"

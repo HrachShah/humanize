@@ -89,6 +89,14 @@ def naturalsize(
         suffix = suffixes["decimal"]
 
     base = 1024 if (gnu or binary) else 1000
+    if isinstance(value, bool):
+        msg = (
+            f"naturalsize() value must be a number or numeric string, not bool "
+            f"(got {value!r}); bools are silently coerced to 0/1 by float() and "
+            f"almost always indicate a bug at the call site (e.g. a JSON loader "
+            f"yielding a JSON boolean for a byte count)."
+        )
+        raise TypeError(msg)
     bytes_ = float(value)
     abs_bytes = abs(bytes_)
 

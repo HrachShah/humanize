@@ -255,10 +255,16 @@ def intword(value: NumberOrString, format: str = "%.1f") -> str:
     chopped = value / power
     rounded_value = float(format % chopped)
 
-    if not largest_ordinal and rounded_value * power == powers[ordinal + 1]:
-        # After rounding, we end up just at the next power
+    if rounded_value >= 1000 and not largest_ordinal:
+        # After rounding, the mantissa reached the next power of 10
+        # (e.g. 1e36 / 1e33 = 1000.0 with format "%.1f"). Promote to the
+        # next slot so the result reads "1.0 googol" instead of
+        # "1000.0 decillion". The largest slot (googol) has nowhere to
+        # promote, so the value is left as-is and the mantissa overflows
+        # gracefully (e.g. 10**101 -> "10.0 googol").
         ordinal += 1
-        rounded_value = 1.0
+        power = powers[ordinal]
+        rounded_value = rounded_value / 1000
 
     singular, plural = human_powers[ordinal]
     unit = _ngettext(singular, plural, math.ceil(rounded_value))

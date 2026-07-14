@@ -365,16 +365,20 @@ def test_naturaldelta_minimum_unit_default(seconds: float, expected: str) -> Non
         ("milliseconds", FOUR_MICROSECONDS, "0 milliseconds"),
         ("milliseconds", ONE_MILLISECOND, "1 millisecond"),
         ("milliseconds", FOUR_MILLISECONDS, "4 milliseconds"),
-        ("milliseconds", MICROSECONDS_101_943, "101 milliseconds"),  # 101.94 ms
+        ("milliseconds", MICROSECONDS_101_943, "102 milliseconds"),  # 101.94 ms rounds up
         ("milliseconds", MILLISECONDS_1_337, "a second"),  # 1,337 ms
         ("milliseconds", 2, "2 seconds"),
         ("milliseconds", 4, "4 seconds"),
         ("milliseconds", ONE_HOUR + FOUR_MILLISECONDS, "an hour"),
         ("milliseconds", ONE_YEAR + FOUR_MICROSECONDS, "a year"),
+        # Rounding boundary cases: 1500us is 1.5 ms which rounds to 2; 999us rounds to 1.
+        ("milliseconds", 1500 / 1_000_000, "2 milliseconds"),
+        ("milliseconds", 999 / 1_000_000, "1 millisecond"),
+        ("milliseconds", 500 / 1_000_000, "0 milliseconds"),  # 0.5 ms rounds to 0 (banker's)
         ("microseconds", ONE_MICROSECOND, "1 microsecond"),
         ("microseconds", FOUR_MICROSECONDS, "4 microseconds"),
         ("microseconds", FOUR_MILLISECONDS, "4 milliseconds"),
-        ("microseconds", MICROSECONDS_101_943, "101 milliseconds"),  # 101,940 µs
+        ("microseconds", MICROSECONDS_101_943, "102 milliseconds"),  # 101,940 µs rounds up
         ("microseconds", MILLISECONDS_1_337, "a second"),  # 1,337,000 µs
         ("microseconds", 2, "2 seconds"),
         ("microseconds", 4, "4 seconds"),
@@ -435,7 +439,7 @@ def test_naturaltime_minimum_unit_default(seconds: float, expected: str) -> None
         ("milliseconds", FOUR_MICROSECONDS, "0 milliseconds ago"),
         ("milliseconds", ONE_MILLISECOND, "1 millisecond ago"),
         ("milliseconds", FOUR_MILLISECONDS, "4 milliseconds ago"),
-        ("milliseconds", MICROSECONDS_101_943, "101 milliseconds ago"),  # 101.94 ms
+        ("milliseconds", MICROSECONDS_101_943, "102 milliseconds ago"),  # 101.94 ms rounds up
         ("milliseconds", MILLISECONDS_1_337, "a second ago"),  # 1,337 ms
         ("milliseconds", 2, "2 seconds ago"),
         ("milliseconds", 4, "4 seconds ago"),
@@ -444,7 +448,7 @@ def test_naturaltime_minimum_unit_default(seconds: float, expected: str) -> None
         ("microseconds", ONE_MICROSECOND, "1 microsecond ago"),
         ("microseconds", FOUR_MICROSECONDS, "4 microseconds ago"),
         ("microseconds", FOUR_MILLISECONDS, "4 milliseconds ago"),
-        ("microseconds", MICROSECONDS_101_943, "101 milliseconds ago"),  # 101,940 µs
+        ("microseconds", MICROSECONDS_101_943, "102 milliseconds ago"),  # 101,940 µs rounds up
         ("microseconds", MILLISECONDS_1_337, "a second ago"),  # 1,337,000 µs
         ("microseconds", 2, "2 seconds ago"),
         ("microseconds", 4, "4 seconds ago"),

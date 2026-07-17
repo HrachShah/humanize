@@ -81,6 +81,11 @@ def test_naturaldelta_returns_nonfinite_numbers_unchanged() -> None:
     assert humanize.naturaldelta(float("-inf")) == "-inf"
 
 
+def test_naturaltime_returns_nonfinite_numbers_unchanged() -> None:
+    assert humanize.naturaltime(float("inf")) == "inf"
+    assert humanize.naturaltime(float("-inf")) == "-inf"
+
+
 @pytest.mark.parametrize(
     "test_input, expected",
     [

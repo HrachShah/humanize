@@ -90,7 +90,7 @@ def _date_and_delta(
             value = value if precise else round(value)
             delta = dt.timedelta(seconds=value)
             date = now - delta
-        except (ValueError, TypeError):
+        except (ValueError, TypeError, OverflowError):
             return None, value
     return date, _abs_timedelta(delta)
 

@@ -76,6 +76,10 @@ def test_date_and_delta() -> None:
 # Tests for the public interface of humanize.time
 
 
+def test_naturaldelta_rejects_unknown_minimum_unit() -> None:
+    with pytest.raises(ValueError, match="Minimum unit 'weeks' not supported"):
+        humanize.naturaldelta(1, minimum_unit="weeks")
+
 @pytest.mark.parametrize(
     "test_input, expected",
     [

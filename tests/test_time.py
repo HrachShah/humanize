@@ -76,6 +76,11 @@ def test_date_and_delta() -> None:
 # Tests for the public interface of humanize.time
 
 
+def test_naturaldelta_returns_nonfinite_numbers_unchanged() -> None:
+    assert humanize.naturaldelta(float("inf")) == "inf"
+    assert humanize.naturaldelta(float("-inf")) == "-inf"
+
+
 @pytest.mark.parametrize(
     "test_input, expected",
     [

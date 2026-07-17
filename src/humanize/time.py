@@ -8,6 +8,7 @@ from __future__ import annotations
 __lazy_modules__ = {"humanize.i18n", "humanize.number"}
 
 from enum import Enum
+import math
 from functools import total_ordering
 
 from .i18n import _gettext as _
@@ -150,8 +151,10 @@ def naturaldelta(
         try:
             int(value)  # Explicitly don't support string such as "NaN" or "inf"
             value = float(value)
+            if not math.isfinite(value):
+                return str(value)
             delta = dt.timedelta(seconds=value)
-        except (ValueError, TypeError):
+        except (ValueError, TypeError, OverflowError):
             return str(value)
 
     use_months = months

@@ -4,7 +4,7 @@ from __future__ import annotations
 
 __lazy_modules__ = {"humanize.i18n", "math"}
 
-from math import log
+from math import isfinite, log
 
 from humanize.i18n import _gettext as _
 
@@ -90,6 +90,8 @@ def naturalsize(
 
     base = 1024 if (gnu or binary) else 1000
     bytes_ = float(value)
+    if not isfinite(bytes_):
+        return str(bytes_)
     abs_bytes = abs(bytes_)
 
     if abs_bytes == 1 and not gnu:

@@ -9,6 +9,12 @@ import pytest
 import humanize
 
 
+def test_naturalsize_returns_nonfinite_values_unchanged() -> None:
+    assert humanize.naturalsize(float("nan")) == "nan"
+    assert humanize.naturalsize(float("inf")) == "inf"
+    assert humanize.naturalsize(float("-inf")) == "-inf"
+
+
 @pytest.mark.parametrize(
     "test_args, expected",
     [

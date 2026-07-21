@@ -93,6 +93,8 @@ def naturalsize(
     if not isfinite(bytes_):
         return str(bytes_)
     abs_bytes = abs(bytes_)
+    if abs_bytes == 0:
+        return "0B" if gnu else _("0 Bytes")
 
     if abs_bytes == 1 and not gnu:
         return _("%d Byte") % int(bytes_)

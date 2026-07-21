@@ -9,6 +9,12 @@ import pytest
 import humanize
 
 
+def test_naturalsize_zero_does_not_use_the_largest_suffix():
+    assert humanize.naturalsize(0) == "0 Bytes"
+    assert humanize.naturalsize(0, binary=True) == "0 Bytes"
+    assert humanize.naturalsize(0, gnu=True) == "0B"
+
+
 def test_naturalsize_returns_nonfinite_values_unchanged() -> None:
     assert humanize.naturalsize(float("nan")) == "nan"
     assert humanize.naturalsize(float("inf")) == "inf"

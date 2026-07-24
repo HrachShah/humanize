@@ -4,12 +4,12 @@ from __future__ import annotations
 
 TYPE_CHECKING = False
 if TYPE_CHECKING:
-    from typing import Any
+    from typing import Any, Iterable
 
 __all__ = ["natural_list"]
 
 
-def natural_list(items: list[Any]) -> str:
+def natural_list(items: Iterable[Any]) -> str:
     """Natural list.
 
     Convert a list of items into a human-readable string with commas and 'and'.
@@ -28,6 +28,7 @@ def natural_list(items: list[Any]) -> str:
     Returns:
         str: A string with commas and 'and' in the right places.
     """
+    items = list(items)
     if not items:
         return ""
     if len(items) == 1:

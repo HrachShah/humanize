@@ -16,6 +16,7 @@ import humanize
         ([[""]], ""),
         ([[1, 2, 3]], "1, 2 and 3"),
         ([[1, "two"]], "1 and two"),
+        [(iter(["one", "two", "three"]),), "one, two and three"],
     ],
 )
 def test_natural_list(

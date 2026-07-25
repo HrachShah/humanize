@@ -89,6 +89,11 @@ def test_naturaldelta_nomonths(test_input: dt.timedelta, expected: str) -> None:
     assert humanize.naturaldelta(test_input, months=False) == expected
 
 
+def test_naturaldelta_rejects_unknown_minimum_unit() -> None:
+    with pytest.raises(ValueError, match="Minimum unit 'fortnights' not supported"):
+        humanize.naturaldelta(1, minimum_unit="fortnights")
+
+
 @pytest.mark.parametrize(
     "test_input, expected",
     [

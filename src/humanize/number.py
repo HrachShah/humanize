@@ -106,7 +106,7 @@ def ordinal(value: NumberOrString, gender: str = "male") -> str:
         if not math.isfinite(float(value)):
             return _format_not_finite(float(value))
         value = int(value)
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         return str(value)
     gender = "male" if gender == "male" else "female"
     abs_value = abs(value)
@@ -165,7 +165,7 @@ def intcomma(value: NumberOrString, ndigits: int | None = None) -> str:
             if not math.isfinite(float(value)):
                 return _format_not_finite(float(value))
             float(value)
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         return str(value)
 
     if ndigits is not None:
@@ -235,7 +235,7 @@ def intword(value: NumberOrString, format: str = "%.1f") -> str:
         if not math.isfinite(float(value)):
             return _format_not_finite(float(value))
         value = int(value)
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         return str(value)
 
     if value < 0:
@@ -302,7 +302,7 @@ def apnumber(value: NumberOrString) -> str:
         if not math.isfinite(float(value)):
             return _format_not_finite(float(value))
         value = int(value)
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         return str(value)
     if not 0 <= value < 10:
         return str(value)
@@ -354,7 +354,7 @@ def fractional(value: NumberOrString) -> str:
         number = float(value)
         if not math.isfinite(number):
             return _format_not_finite(number)
-    except (TypeError, ValueError):
+    except (TypeError, ValueError, OverflowError):
         return str(value)
     from fractions import Fraction
 

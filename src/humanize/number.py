@@ -415,7 +415,7 @@ def scientific(value: NumberOrString, precision: int = 2) -> str:
         value = float(value)
         if not math.isfinite(value):
             return _format_not_finite(value)
-    except (ValueError, TypeError):
+    except (ValueError, TypeError, OverflowError):
         return str(value)
     fmt = f"{{:.{int(precision)}e}}"
     n = fmt.format(value)

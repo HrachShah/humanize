@@ -226,6 +226,7 @@ def test_fractional(test_input: float | str, expected: str) -> None:
         ([2e-20], "2.00 x 10⁻²⁰"),
         ([-3e20], "-3.00 x 10²⁰"),
         ([-4e-20], "-4.00 x 10⁻²⁰"),
+        ([10**1000], str(10**1000)),
         ([math.nan], "NaN"),
         ([math.inf], "+Inf"),
         ([-math.inf], "-Inf"),

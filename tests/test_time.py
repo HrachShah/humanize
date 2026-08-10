@@ -192,6 +192,11 @@ def test_naturaltime(
     assert humanize.naturaltime(test_input) == expected
 
 
+@pytest.mark.parametrize("value", [float("inf"), float("-inf")])
+def test_naturaltime_preserves_non_finite_values(value: float) -> None:
+    assert humanize.naturaltime(value) == str(value)
+
+
 @freeze_time(FROZEN_DATE)
 @pytest.mark.parametrize(
     "test_input, expected",
